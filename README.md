@@ -19,8 +19,8 @@ Para que el sistema funcione correctamente entre tus PCs, asegurate de tener:
 
 ---
 ## Para utilizar el mcp-server-playwright (detecta los DOM para poder utilzarlo y hacer el test sin necesidad de harcodear)
-node detectar-selectores.js https://practicetestautomation.com/practice-test-login/ o "Link"
---lugo correr el test y el localhost:3000
+* node detectar-selectores.js https://practicetestautomation.com/practice-test-login/ o "Link"
+* --lugo correr el test y el localhost:3000
 
 ## Instalación y Configuración
 
