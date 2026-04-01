@@ -29,12 +29,6 @@ Para que el sistema funcione correctamente entre tus PCs, asegurate de tener:
 usuario: tomsmith | pass: SuperSecretPassword!
 * https://practicetestautomation.com/practice-test-login/
 usuario: student | pass: Password123
-* https://demoqa.com/login
-usuario: testuser | pass: Test@1234  (hay que registrarse primero)
-* https://parabank.parasoft.com/parabank/login.htm
-usuario: john | pass: demo
-* https://automationbookstore.dev/
-(tiene login modal, buen desafío)
 
 ## Instalación y Configuración
 ---
