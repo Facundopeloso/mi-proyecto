@@ -30,3 +30,4 @@ npx playwright install chromium
 npx playwright test --headed (este si quieren ver la interfaz)
 npx playwright test (simplemente verlo por consola)
 node server.js (para usar ollama en localhost:3000)
+ingresar al localhost:3000 para ver reportes y hacer analizar los reportes con la IA
