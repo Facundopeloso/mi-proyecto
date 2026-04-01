@@ -1,0 +1,333 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Test Report — Playwright + Llama 3</title>
+<link href="https://fonts.googleapis.com/css2?family=Space+Mono:wght@400;700&family=Syne:wght@400;700;800&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --bg: #0a0a0f;
+    --surface: #111118;
+    --border: #1e1e2e;
+    --accent: #00ff9d;
+    --accent2: #ff4d6d;
+    --accent3: #7b61ff;
+    --text: #e0e0f0;
+    --muted: #555570;
+    --mono: 'Space Mono', monospace;
+    --sans: 'Syne', sans-serif;
+  }
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  body {
+    background: var(--bg);
+    color: var(--text);
+    font-family: var(--sans);
+    min-height: 100vh;
+    padding: 2rem;
+    background-image:
+      radial-gradient(ellipse at 20% 20%, rgba(123,97,255,0.07) 0%, transparent 60%),
+      radial-gradient(ellipse at 80% 80%, rgba(0,255,157,0.05) 0%, transparent 60%);
+  }
+
+  header {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    margin-bottom: 2.5rem;
+    padding-bottom: 1.5rem;
+    border-bottom: 1px solid var(--border);
+    animation: fadeDown 0.6s ease both;
+  }
+
+  .logo {
+    width: 44px; height: 44px;
+    background: linear-gradient(135deg, var(--accent3), var(--accent));
+    border-radius: 10px;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 1.3rem;
+    flex-shrink: 0;
+  }
+
+  header h1 { font-size: 1.4rem; font-weight: 800; letter-spacing: -0.02em; }
+  header span { font-family: var(--mono); font-size: 0.75rem; color: var(--muted); display: block; margin-top: 2px; }
+
+  .grid { display: grid; grid-template-columns: 1fr 1fr; gap: 1.5rem; margin-bottom: 1.5rem; }
+  @media (max-width: 700px) { .grid { grid-template-columns: 1fr; } }
+
+  .card {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 14px;
+    padding: 1.5rem;
+    animation: fadeUp 0.6s ease both;
+  }
+  .card:nth-child(2) { animation-delay: 0.1s; }
+
+  .card-label {
+    font-family: var(--mono);
+    font-size: 0.65rem;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: var(--muted);
+    margin-bottom: 1rem;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+  }
+  .card-label::before {
+    content: '';
+    display: inline-block;
+    width: 6px; height: 6px;
+    border-radius: 50%;
+    background: var(--accent);
+  }
+
+  .stat-big { font-size: 3rem; font-weight: 800; line-height: 1; color: var(--accent2); font-family: var(--mono); }
+  .stat-big.ok { color: var(--accent); }
+  .stat-sub { font-size: 0.8rem; color: var(--muted); margin-top: 0.4rem; }
+
+  .log-box {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 14px;
+    padding: 1.5rem;
+    margin-bottom: 1.5rem;
+    animation: fadeUp 0.6s ease 0.2s both;
+  }
+
+  .log-entry {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    padding: 0.85rem 1rem;
+    border-radius: 8px;
+    margin-bottom: 0.5rem;
+    font-family: var(--mono);
+    font-size: 0.8rem;
+    background: rgba(255,77,109,0.06);
+    border: 1px solid rgba(255,77,109,0.15);
+    transition: background 0.2s;
+  }
+  .log-entry:hover { background: rgba(255,77,109,0.12); }
+  .log-entry.ok { background: rgba(0,255,157,0.05); border-color: rgba(0,255,157,0.15); }
+  .log-entry.ok:hover { background: rgba(0,255,157,0.1); }
+
+  .badge {
+    font-size: 0.65rem;
+    font-weight: 700;
+    padding: 2px 8px;
+    border-radius: 4px;
+    background: var(--accent2);
+    color: #fff;
+    flex-shrink: 0;
+    letter-spacing: 0.05em;
+  }
+  .badge.ok { background: var(--accent); color: #000; }
+
+  .log-user { color: var(--text); flex: 1; }
+
+  .ai-box {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 14px;
+    padding: 1.5rem;
+    animation: fadeUp 0.6s ease 0.3s both;
+  }
+
+  .ai-header { display: flex; align-items: center; gap: 0.75rem; margin-bottom: 1.25rem; }
+
+  .ai-avatar {
+    width: 36px; height: 36px;
+    background: linear-gradient(135deg, var(--accent3), #c084fc);
+    border-radius: 50%;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 1rem;
+    flex-shrink: 0;
+  }
+
+  .ai-name { font-weight: 700; font-size: 0.95rem; }
+  .ai-model { font-family: var(--mono); font-size: 0.65rem; color: var(--accent3); }
+
+  .ai-response { font-size: 0.9rem; line-height: 1.7; color: #c0c0d8; white-space: pre-wrap; min-height: 60px; }
+
+  .loading { display: flex; align-items: center; gap: 0.75rem; color: var(--muted); font-family: var(--mono); font-size: 0.8rem; }
+  .dots span { animation: blink 1.2s infinite; opacity: 0; }
+  .dots span:nth-child(2) { animation-delay: 0.2s; }
+  .dots span:nth-child(3) { animation-delay: 0.4s; }
+
+  .btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.6rem;
+    font-family: var(--mono);
+    font-size: 0.8rem;
+    font-weight: 700;
+    padding: 0.6rem 1.2rem;
+    border-radius: 8px;
+    border: none;
+    cursor: pointer;
+    margin-top: 1.5rem;
+    margin-right: 0.75rem;
+    transition: opacity 0.2s, transform 0.1s;
+    letter-spacing: 0.05em;
+  }
+  .btn:hover { opacity: 0.85; transform: translateY(-1px); }
+  .btn:active { transform: translateY(0); }
+  .btn:disabled { opacity: 0.4; cursor: not-allowed; transform: none; }
+  .btn-primary { background: var(--accent); color: #000; }
+  .btn-secondary { background: var(--border); color: var(--text); }
+
+  .divider { height: 1px; background: var(--border); margin: 1.25rem 0; }
+  .highlight { color: var(--accent); }
+  .timestamp { font-family: var(--mono); font-size: 0.7rem; color: var(--muted); margin-top: 1.5rem; text-align: right; }
+
+  @keyframes fadeUp { from { opacity: 0; transform: translateY(16px); } to { opacity: 1; transform: translateY(0); } }
+  @keyframes fadeDown { from { opacity: 0; transform: translateY(-10px); } to { opacity: 1; transform: translateY(0); } }
+  @keyframes blink { 0%, 100% { opacity: 0; } 50% { opacity: 1; } }
+</style>
+</head>
+<body>
+
+<header>
+  <div class="logo">🎭</div>
+  <div>
+    <h1>Test Report <span class="highlight">Playwright</span></h1>
+    <span id="header-date">Cargando reporte...</span>
+  </div>
+</header>
+
+<div class="grid">
+  <div class="card">
+    <div class="card-label">Tests fallidos</div>
+    <div class="stat-big" id="fail-count">—</div>
+    <div class="stat-sub">usuarios inválidos detectados</div>
+  </div>
+  <div class="card">
+    <div class="card-label">Estado general</div>
+    <div class="stat-big" id="status-text">—</div>
+    <div class="stat-sub" id="status-sub">esperando reporte...</div>
+  </div>
+</div>
+
+<div class="log-box">
+  <div class="card-label">Log de incidencias</div>
+  <div id="log-entries">
+    <div class="loading">Cargando reporte... <span class="dots"><span>.</span><span>.</span><span>.</span></span></div>
+  </div>
+  <button class="btn btn-secondary" onclick="cargarReporte()">🔄 Recargar reporte</button>
+</div>
+
+<div class="ai-box">
+  <div class="ai-header">
+    <div class="ai-avatar">🦙</div>
+    <div>
+      <div class="ai-name">Análisis de Llama 3</div>
+      <div class="ai-model">llama3 · ollama · remoto</div>
+    </div>
+  </div>
+  <div class="divider"></div>
+  <div id="ai-response" class="ai-response">
+    Hacé click en "Analizar" para que Llama 3 interprete el reporte.
+  </div>
+  <button class="btn btn-primary" id="analyze-btn" onclick="analizarReporte()">▶ Analizar con Llama 3</button>
+</div>
+
+<div class="timestamp" id="footer-ts"></div>
+
+<script>
+  let reporteTexto = '';
+
+  function parsearReporte(texto) {
+    const lineas = texto.split('\n').filter(l => l.trim());
+    const fecha = lineas[0]?.replace('LOG DE INCIDENCIAS - ', '').replace('LOG - ', '') || '';
+    const entradas = lineas.slice(2).map(l => {
+      const match = l.match(/\[(FALLO|OK)\] Usuario: ([^\|]+)/);
+      return match ? { estado: match[1], usuario: match[2].trim() } : null;
+    }).filter(Boolean);
+    return { fecha, entradas };
+  }
+
+  function renderReporte(texto) {
+    reporteTexto = texto;
+    const { fecha, entradas } = parsearReporte(texto);
+
+    document.getElementById('header-date').textContent = fecha || 'Sin fecha';
+    document.getElementById('footer-ts').textContent = `Último reporte: ${fecha}`;
+
+    const fallos = entradas.filter(e => e.estado === 'FALLO').length;
+    document.getElementById('fail-count').textContent = fallos;
+
+    const statusEl = document.getElementById('status-text');
+    statusEl.textContent = fallos === 0 ? 'OK' : 'FALLO';
+    statusEl.className = 'stat-big' + (fallos === 0 ? ' ok' : '');
+    document.getElementById('status-sub').textContent = fallos === 0
+      ? 'todos los tests pasaron'
+      : `${fallos} test${fallos > 1 ? 's' : ''} fallaron`;
+
+    const container = document.getElementById('log-entries');
+    if (entradas.length === 0) {
+      container.innerHTML = '<div class="loading">Sin entradas en el reporte.</div>';
+      return;
+    }
+    container.innerHTML = entradas.map(e => `
+      <div class="log-entry ${e.estado === 'OK' ? 'ok' : ''}">
+        <span class="badge ${e.estado === 'OK' ? 'ok' : ''}">${e.estado}</span>
+        <span class="log-user">${e.usuario}</span>
+      </div>
+    `).join('');
+  }
+
+  async function cargarReporte() {
+    try {
+      const res = await fetch('/reporte');
+      if (!res.ok) throw new Error('No se encontró el reporte. ¿Corriste los tests?');
+      const texto = await res.text();
+      renderReporte(texto);
+    } catch (e) {
+      document.getElementById('log-entries').innerHTML =
+        `<div style="color:var(--accent2);font-family:var(--mono);font-size:0.8rem">❌ ${e.message}</div>`;
+    }
+  }
+
+  async function analizarReporte() {
+    if (!reporteTexto) {
+      alert('Primero cargá el reporte haciendo click en "Recargar reporte".');
+      return;
+    }
+
+    const btn = document.getElementById('analyze-btn');
+    const responseEl = document.getElementById('ai-response');
+
+    btn.disabled = true;
+    btn.textContent = '⏳ Analizando...';
+    responseEl.innerHTML = '<div class="loading">Consultando Llama 3... <span class="dots"><span>.</span><span>.</span><span>.</span></span></div>';
+
+    try {
+      const res = await fetch('/api/generate', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          model: 'llama3',
+          prompt: `Analizá este reporte de tests de login y explicá en español qué falló de forma clara y breve:\n\n${reporteTexto}`,
+          stream: false,
+        }),
+      });
+
+      const data = await res.json();
+      responseEl.textContent = data.response || 'Sin respuesta.';
+    } catch (err) {
+      responseEl.innerHTML = `<span style="color:var(--accent2)">❌ Error al conectar con Llama 3: ${err.message}</span>`;
+    }
+
+    btn.disabled = false;
+    btn.textContent = '▶ Analizar nuevamente';
+  }
+
+  // Carga el reporte al iniciar
+  cargarReporte();
+</script>
+</body>
+</html>
