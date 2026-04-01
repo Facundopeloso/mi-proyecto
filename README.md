@@ -20,8 +20,9 @@ Para que el sistema funcione correctamente entre tus PCs, asegurate de tener:
 ---
 ## Para utilizar MCP Y PLAYWRIGHT en otro link, dos posibles usos actualmente:
 
-* $env:BASE_URL="https://the-internet.herokuapp.com/login"; npx playwright test
-* $env:BASE_URL="https://practicetestautomation.com/practice-test-login/"; npx playwright test
+* $env:BASE_URL="https://the-internet.herokuapp.com/login"; npx playwright test --headed
+* $env:BASE_URL="https://practicetestautomation.com/practice-test-login/"; npx playwright test --headed
+* $env:BASE_URL="https://www.saucedemo.com/"; npx playwright test --headed
 * --luego correr el server.js
 
 ---
