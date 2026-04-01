@@ -21,8 +21,12 @@ Para que el sistema funcione correctamente entre tus PCs, asegurate de tener:
 
 ## Instalación y Configuración
 
-### 1. Clonar e Instalar Dependencias
+### 1. Clonar e Instalar Dependencias / correr test y node para usar ollama
 ```bash
 git clone <tu-repo-privado>
 cd mi-proyecto
 npm install
+npx playwright install chromium
+npx playwright test --headed (este si quieren ver la interfaz)
+npx playwright test (simplemente verlo por consola)
+node server.js (para usar ollama en localhost:3000)
