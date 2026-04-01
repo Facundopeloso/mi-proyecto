@@ -18,17 +18,13 @@ Para que el sistema funcione correctamente entre tus PCs, asegurate de tener:
 * **Configuración de Red:** Debés actualizar la variable `OLLAMA_URL` en `server.js` con tu enlace actual de ngrok.
 
 ---
-## Para utilizar el mcp-server-playwright (detecta los DOM para poder utilzarlo y hacer el test sin necesidad de harcodear)
+## Para utilizar MCP Y PLAYWRIGHT en otro link, dos posibles usos actualmente:
 
-* node detectar-selectores.js https://practicetestautomation.com/practice-test-login/ o "Link"
-* --lugo correr el test y el localhost:3000
+* $env:BASE_URL="https://the-internet.herokuapp.com/login"; npx playwright test
+* $env:BASE_URL="https://practicetestautomation.com/practice-test-login/"; npx playwright test
+* --luego correr el server.js
 
 ---
-## Algunos links de pruebas
-* https://the-internet.herokuapp.com/login
-usuario: tomsmith | pass: SuperSecretPassword!
-* https://practicetestautomation.com/practice-test-login/
-usuario: student | pass: Password123
 
 ## Instalación y Configuración
 ---
