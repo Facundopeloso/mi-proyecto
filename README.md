@@ -19,11 +19,24 @@ Para que el sistema funcione correctamente entre tus PCs, asegurate de tener:
 
 ---
 ## Para utilizar el mcp-server-playwright (detecta los DOM para poder utilzarlo y hacer el test sin necesidad de harcodear)
+
 * node detectar-selectores.js https://practicetestautomation.com/practice-test-login/ o "Link"
 * --lugo correr el test y el localhost:3000
 
-## Instalación y Configuración
+---
+## Algunos links de pruebas
+* https://the-internet.herokuapp.com/login
+usuario: tomsmith | pass: SuperSecretPassword!
+* https://practicetestautomation.com/practice-test-login/
+usuario: student | pass: Password123
+* https://demoqa.com/login
+usuario: testuser | pass: Test@1234  (hay que registrarse primero)
+* https://parabank.parasoft.com/parabank/login.htm
+usuario: john | pass: demo
+* https://automationbookstore.dev/
+(tiene login modal, buen desafío)
 
+## Instalación y Configuración
 ---
 ### 1. Clonar e Instalar Dependencias / correr test y node para usar ollama
 ```bash
