@@ -18,9 +18,13 @@ Para que el sistema funcione correctamente entre tus PCs, asegurate de tener:
 * **Configuración de Red:** Debés actualizar la variable `OLLAMA_URL` en `server.js` con tu enlace actual de ngrok.
 
 ---
+## Para utilizar el mcp-server-playwright (detecta los DOM para poder utilzarlo y hacer el test sin necesidad de harcodear)
+node detectar-selectores.js https://practicetestautomation.com/practice-test-login/ o "Link"
+--lugo correr el test y el localhost:3000
 
 ## Instalación y Configuración
 
+---
 ### 1. Clonar e Instalar Dependencias / correr test y node para usar ollama
 ```bash
 git clone <tu-repo-privado>
